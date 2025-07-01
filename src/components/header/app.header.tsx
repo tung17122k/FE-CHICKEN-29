@@ -19,6 +19,8 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import { Container } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
+import Link from 'next/link'
+
 
 
 function stringAvatar(name: string) {
@@ -71,6 +73,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function AppHeader() {
+
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
         React.useState<null | HTMLElement>(null);
@@ -112,8 +115,26 @@ export default function AppHeader() {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+            <Box sx={{
+                "> a": {
+                    color: 'unset',
+                    textDecoration: 'unset',
+                }
+            }}>
+                <Link href="/profile" passHref >
+                    <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+                </Link>
+            </Box>
+            <Box sx={{
+                "> a": {
+                    color: 'unset',
+                    textDecoration: 'unset',
+                }
+            }}>
+                <Link href="/logout" passHref>
+                    <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+                </Link>
+            </Box>
         </Menu>
     );
 
@@ -204,7 +225,10 @@ export default function AppHeader() {
                             />
                         </Search>
                         <Box sx={{ flexGrow: 1 }} />
-                        <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+                        <Box sx={{
+                            display: { xs: 'none', md: 'flex' }
+
+                        }}>
                             <IconButton size="large" aria-label="show 4 new mails" color="inherit">
                                 <Badge badgeContent={4} color="error">
                                     <MailIcon />
