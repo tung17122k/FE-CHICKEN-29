@@ -6,9 +6,9 @@ export async function GET(request: NextRequest, response: NextResponse) {
 
     const url = new URL(request.url)
     const { searchParams } = new URL(url)
-    console.log("searchParams", searchParams);
 
-    const imageName = searchParams.get('image')
+
+    const imageName = searchParams.get('product')
 
 
     return await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/images/product/${imageName}`)

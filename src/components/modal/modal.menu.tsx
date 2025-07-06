@@ -28,7 +28,7 @@ const ModalMenu = (props: IProps) => {
                     >
                         <Box
                             component="img"
-                            src={`http://localhost:3000/api?image=${item?.image}`}
+                            src={`http://localhost:3000/api?product=${item?.image}`}
                             alt="food"
                             sx={{
                                 width: '100%',

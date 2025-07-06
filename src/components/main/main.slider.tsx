@@ -4,6 +4,7 @@ import { Badge, Box, Button, Card, CardContent, CardMedia, Grid, IconButton, Mod
 import AddIcon from '@mui/icons-material/Add';
 import { useState } from "react";
 import ModalMenu from "../modal/modal.menu";
+import Link from "next/link";
 
 
 interface IProps {
@@ -37,21 +38,24 @@ const MainSlider = (props: IProps) => {
                     return (
                         <Grid item xs={6} md={4} key={item.id}>
                             <Card sx={{ position: 'relative', borderRadius: 2 }}>
-                                <Badge
+                                {/* <Badge
                                     badgeContent={1}
                                     color="primary"
                                     sx={{ position: 'absolute', top: 12, right: 12 }}
-                                />
+                                /> */}
                                 <CardMedia
                                     component="img"
                                     height="100"
-                                    image={`${process.env.NEXT_PUBLIC_BACKEND_URL}/images/product/${item?.image}`}
+                                    image={`http://localhost:3000/api?product=${item?.image}`}
                                     alt={item.name}
                                     onClick={() => handleClickItem(item)}
                                 />
                                 <CardContent sx={{ p: 1 }}>
                                     <Typography variant="body2" fontWeight="bold" noWrap>
-                                        {item?.name}
+                                        <Link href={`/product/${item.id}?product=${item.image}`} style={{
+                                            textDecoration: 'none',
+                                            color: 'black'
+                                        }}>{item?.name}</Link>
                                     </Typography>
                                     <Box display="flex" justifyContent="space-between" alignItems="center" mt={0.5}>
                                         <Typography variant="body2" color="error">
