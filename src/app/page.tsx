@@ -4,8 +4,13 @@ import MainSlider from '@/components/main/main.slider';
 import * as React from 'react';
 import { Container } from "@mui/material";
 import { sendRequest } from '@/utils/api';
+import { getServerSession } from "next-auth/next"
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 
 export default async function HomePage() {
+  const session = await getServerSession(authOptions)
+
+
 
   const friedChicken = await sendRequest<IBackendRes<IProductCategory[]>>({
     url: `http://localhost:8080/product`,

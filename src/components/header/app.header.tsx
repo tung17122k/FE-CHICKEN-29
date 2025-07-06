@@ -20,6 +20,7 @@ import MoreIcon from '@mui/icons-material/MoreVert';
 import { Container } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Link from 'next/link'
+import { useSession, signIn, signOut } from "next-auth/react"
 
 
 
@@ -73,6 +74,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function AppHeader() {
+    const { data: session } = useSession()
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
@@ -225,48 +227,63 @@ export default function AppHeader() {
                             />
                         </Search>
                         <Box sx={{ flexGrow: 1 }} />
-                        <Box sx={{
-                            display: { xs: 'none', md: 'flex' }
+                        {
+                            session ?
+                                <>
+                                    <Box sx={{
+                                        display: { xs: 'none', md: 'flex' }
 
-                        }}>
-                            <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-                                <Badge badgeContent={4} color="error">
-                                    <MailIcon />
-                                </Badge>
-                            </IconButton>
-                            <IconButton
-                                size="large"
-                                aria-label="show 17 new notifications"
-                                color="inherit"
-                            >
-                                <Badge badgeContent={17} color="error">
-                                    <NotificationsIcon />
-                                </Badge>
-                            </IconButton>
-                            <IconButton
-                                size="large"
-                                edge="end"
-                                aria-label="account of current user"
-                                aria-controls={menuId}
-                                aria-haspopup="true"
-                                onClick={handleProfileMenuOpen}
-                                color="inherit"
-                            >
-                                <Avatar {...stringAvatar('Kent Dodds')} sx={{ color: "#fb9555", backgroundColor: "white", width: 28, height: 28 }} />
-                            </IconButton>
-                        </Box>
-                        <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-                            <IconButton
-                                size="small"
-                                aria-label="show more"
-                                aria-controls={mobileMenuId}
-                                aria-haspopup="true"
-                                onClick={handleMobileMenuOpen}
-                                color="inherit"
-                            >
-                                <MoreIcon />
-                            </IconButton>
-                        </Box>
+                                    }}>
+                                        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+                                            <Badge badgeContent={4} color="error">
+                                                <MailIcon />
+                                            </Badge>
+                                        </IconButton>
+                                        <IconButton
+                                            size="large"
+                                            aria-label="show 17 new notifications"
+                                            color="inherit"
+                                        >
+                                            <Badge badgeContent={17} color="error">
+                                                <NotificationsIcon />
+                                            </Badge>
+                                        </IconButton>
+                                        <IconButton
+                                            size="large"
+                                            edge="end"
+                                            aria-label="account of current user"
+                                            aria-controls={menuId}
+                                            aria-haspopup="true"
+                                            onClick={handleProfileMenuOpen}
+                                            color="inherit"
+                                        >
+                                            <Avatar {...stringAvatar('Kent Dodds')} sx={{ color: "#fb9555", backgroundColor: "white", width: 28, height: 28 }} />
+                                        </IconButton>
+                                    </Box>
+                                    <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+                                        <IconButton
+                                            size="small"
+                                            aria-label="show more"
+                                            aria-controls={mobileMenuId}
+                                            aria-haspopup="true"
+                                            onClick={handleMobileMenuOpen}
+                                            color="inherit"
+                                        >
+                                            <MoreIcon />
+                                        </IconButton>
+                                    </Box>
+                                </>
+                                :
+                                <>
+                                    <Link href={"/api/auth/signin"} style={{
+                                        textDecoration: "none",
+                                        color: "#fff",
+                                        fontWeight: 500
+
+                                    }}>Login</Link>
+                                </>
+                        }
+
                     </Toolbar>
                 </Container>
             </AppBar>
