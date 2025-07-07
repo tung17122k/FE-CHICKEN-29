@@ -17,10 +17,12 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
-import { Container } from '@mui/material';
+import { Button, Container } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Link from 'next/link'
+import LogoutIcon from '@mui/icons-material/Logout';
 import { useSession, signIn, signOut } from "next-auth/react"
+import { useRouter } from 'next/navigation'
 
 
 
@@ -74,7 +76,10 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function AppHeader() {
-    const { data: session } = useSession()
+    const { data: session } = useSession();
+    const router = useRouter();
+    console.log("session", session);
+
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
@@ -123,9 +128,11 @@ export default function AppHeader() {
                     textDecoration: 'unset',
                 }
             }}>
-                <Link href="/profile" passHref >
+                <Button onClick={() => { router.push("/profile") }} sx={{
+                    color: 'inherit',
+                }}>
                     <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-                </Link>
+                </Button>
             </Box>
             <Box sx={{
                 "> a": {
@@ -133,9 +140,11 @@ export default function AppHeader() {
                     textDecoration: 'unset',
                 }
             }}>
-                <Link href="/logout" passHref>
-                    <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
-                </Link>
+                <Button sx={{
+                    color: 'inherit',
+                }}>
+                    <MenuItem onClick={() => { handleMenuClose(); signOut() }}>Logout</MenuItem>
+                </Button>
             </Box>
         </Menu>
     );
@@ -166,19 +175,19 @@ export default function AppHeader() {
                 </IconButton>
                 <p>Messages</p>
             </MenuItem>
-            <MenuItem>
+            <MenuItem onClick={() => { handleMenuClose(); signOut() }}>
                 <IconButton
                     size="large"
                     aria-label="show 17 new notifications"
                     color="inherit"
                 >
                     <Badge badgeContent={17} color="error">
-                        <NotificationsIcon />
+                        <LogoutIcon />
                     </Badge>
                 </IconButton>
-                <p>Notifications</p>
+                <p>Logout</p>
             </MenuItem>
-            <MenuItem onClick={handleProfileMenuOpen}>
+            <MenuItem onClick={() => { router.push('/profile') }}>
                 <IconButton
                     size="large"
                     aria-label="account of current user"
@@ -241,15 +250,6 @@ export default function AppHeader() {
                                         </IconButton>
                                         <IconButton
                                             size="large"
-                                            aria-label="show 17 new notifications"
-                                            color="inherit"
-                                        >
-                                            <Badge badgeContent={17} color="error">
-                                                <NotificationsIcon />
-                                            </Badge>
-                                        </IconButton>
-                                        <IconButton
-                                            size="large"
                                             edge="end"
                                             aria-label="account of current user"
                                             aria-controls={menuId}
@@ -275,12 +275,12 @@ export default function AppHeader() {
                                 </>
                                 :
                                 <>
-                                    <Link href={"/api/auth/signin"} style={{
+                                    <Button onClick={() => signIn()} style={{
                                         textDecoration: "none",
                                         color: "#fff",
                                         fontWeight: 500
 
-                                    }}>Login</Link>
+                                    }}>Login</Button>
                                 </>
                         }
 
