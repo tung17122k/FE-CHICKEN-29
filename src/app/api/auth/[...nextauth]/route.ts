@@ -25,7 +25,7 @@ export const authOptions: AuthOptions = {
             // e.g. domain, username, password, 2FA token, etc.
             // You can pass any HTML attribute to the <input> tag through the object.
             credentials: {
-                email: { label: "Email", type: "text", placeholder: "jsmith" },
+                email: { label: "Email", type: "text", placeholder: "admin@gmail.com" },
                 password: { label: "Password", type: "password" }
             },
             async authorize(credentials, req) {
@@ -56,7 +56,15 @@ export const authOptions: AuthOptions = {
 
                 } else {
                     // If you return null then an error will be displayed advising the user to check their details.
-                    return null
+                    // return null
+                    const message = Array.isArray(res?.message)
+                        ? res.message.map((err) => err.message).join('\n')
+                        : res?.message || 'Đăng nhập thất bại';
+
+                    throw new Error(message);
+
+
+
 
                     // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
                 }
@@ -67,10 +75,6 @@ export const authOptions: AuthOptions = {
             clientId: process.env.GITHUB_ID!,
             clientSecret: process.env.GITHUB_SECRET!,
         }),
-        // FaceItProvider({
-        //     clientId: process.env.FACEIT_CLIENT_ID,
-        //     clientSecret: process.env.FACEIT_CLIENT_SECRET
-        // }),
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID!,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET!
@@ -119,6 +123,9 @@ export const authOptions: AuthOptions = {
             return session
         },
     },
+    pages: {
+        signIn: "/auth/signin"
+    }
 }
 
 const handler = NextAuth(authOptions)

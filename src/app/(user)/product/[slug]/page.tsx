@@ -6,11 +6,11 @@ import { useSearchParams } from "next/navigation";
 
 const DetailProductPage = (props: any) => {
     const { params } = props
-    console.log("params", params);
+    // console.log("params", params);
 
     const searchParams = useSearchParams();
     const search = searchParams.get('product')
-    console.log('search', search);
+    // console.log('search', search);
 
 
 

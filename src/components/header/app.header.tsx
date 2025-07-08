@@ -15,13 +15,12 @@ import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import { Button, Container } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
-import Link from 'next/link'
 import LogoutIcon from '@mui/icons-material/Logout';
-import { useSession, signIn, signOut } from "next-auth/react"
+import { useSession, signOut } from "next-auth/react"
+// import { signIn } from "next-auth/react"
 import { useRouter } from 'next/navigation'
 
 
@@ -105,6 +104,10 @@ export default function AppHeader() {
         setMobileMoreAnchorEl(event.currentTarget);
     };
 
+    const signIn = () => {
+        router.push("/auth/signin")
+    }
+
     const menuId = 'primary-search-account-menu';
     const renderMenu = (
         <Menu
@@ -181,7 +184,7 @@ export default function AppHeader() {
                     aria-label="show 17 new notifications"
                     color="inherit"
                 >
-                    <Badge badgeContent={17} color="error">
+                    <Badge >
                         <LogoutIcon />
                     </Badge>
                 </IconButton>

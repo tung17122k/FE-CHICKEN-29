@@ -15,9 +15,6 @@ export default async function HomePage() {
   const friedChicken = await sendRequest<IBackendRes<IProductCategory[]>>({
     url: `http://localhost:8080/product`,
     method: 'GET',
-    headers: {
-      Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiZW1haWwiOiJzYW5raW5nMTcxMkBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJhY2NvdW50VHlwZSI6IlNZU1RFTSIsIm5hbWUiOiIiLCJyb2xlSWQiOjIsInBob25lIjoiIiwiYWRkcmVzcyI6IiIsImlhdCI6MTc1MTM0Nzg1MCwiZXhwIjoxNzUxOTUyNjUwfQ.1BTTXC-Pz4YRPpNNMsPJEJYYUi25hTICtnjkmTJgpUs'
-    },
     queryParams: { category: "FRIED_CHICKEN" }
   })
 
@@ -25,9 +22,6 @@ export default async function HomePage() {
   const lightFood = await sendRequest<IBackendRes<IProductCategory[]>>({
     url: `http://localhost:8080/product`,
     method: 'GET',
-    headers: {
-      Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiZW1haWwiOiJzYW5raW5nMTcxMkBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJhY2NvdW50VHlwZSI6IlNZU1RFTSIsIm5hbWUiOiIiLCJyb2xlSWQiOjIsInBob25lIjoiIiwiYWRkcmVzcyI6IiIsImlhdCI6MTc1MTM0Nzg1MCwiZXhwIjoxNzUxOTUyNjUwfQ.1BTTXC-Pz4YRPpNNMsPJEJYYUi25hTICtnjkmTJgpUs'
-    },
     queryParams: {
       category: 'LIGHT_FOOD'
     }
@@ -36,9 +30,6 @@ export default async function HomePage() {
   const drinks = await sendRequest<IBackendRes<IProductCategory[]>>({
     url: `http://localhost:8080/product`,
     method: 'GET',
-    headers: {
-      Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiZW1haWwiOiJzYW5raW5nMTcxMkBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJhY2NvdW50VHlwZSI6IlNZU1RFTSIsIm5hbWUiOiIiLCJyb2xlSWQiOjIsInBob25lIjoiIiwiYWRkcmVzcyI6IiIsImlhdCI6MTc1MTM0Nzg1MCwiZXhwIjoxNzUxOTUyNjUwfQ.1BTTXC-Pz4YRPpNNMsPJEJYYUi25hTICtnjkmTJgpUs'
-    },
     queryParams: {
       category: 'DRINKS'
     }
@@ -46,9 +37,6 @@ export default async function HomePage() {
   const burger = await sendRequest<IBackendRes<IProductCategory[]>>({
     url: `http://localhost:8080/product`,
     method: 'GET',
-    headers: {
-      Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiZW1haWwiOiJzYW5raW5nMTcxMkBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJhY2NvdW50VHlwZSI6IlNZU1RFTSIsIm5hbWUiOiIiLCJyb2xlSWQiOjIsInBob25lIjoiIiwiYWRkcmVzcyI6IiIsImlhdCI6MTc1MTM0Nzg1MCwiZXhwIjoxNzUxOTUyNjUwfQ.1BTTXC-Pz4YRPpNNMsPJEJYYUi25hTICtnjkmTJgpUs'
-    },
     queryParams: {
       category: 'BURGER'
     }
