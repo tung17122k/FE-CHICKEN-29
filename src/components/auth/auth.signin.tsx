@@ -62,7 +62,7 @@ const AuthSignIn = () => {
             password: password,
             redirect: false
         })
-        console.log("res", res);
+        // console.log("res", res);
         if (!res?.error) {
             router.push("/")
         } else {

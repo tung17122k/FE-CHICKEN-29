@@ -13,6 +13,13 @@ declare global {
         "categoryId": number
     }
 
+    interface ICategory {
+        "id": number,
+        "name": string,
+        "description": string
+    }
+
+
     interface IRequest {
         url: string;
         method: string;

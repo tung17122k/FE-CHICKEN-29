@@ -22,10 +22,15 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { useSession, signOut } from "next-auth/react"
 // import { signIn } from "next-auth/react"
 import { useRouter } from 'next/navigation'
+import Link from 'next/link';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
+
+
 
 
 
 function stringAvatar(name: string) {
+    // const { data: session } = useSession();
     return {
         children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
     };
@@ -171,12 +176,12 @@ export default function AppHeader() {
 
         >
             <MenuItem>
-                <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-                    <Badge badgeContent={4} color="error">
-                        <MailIcon />
+                <IconButton size="large" aria-label="show 4 new mails" color="inherit" onClick={() => { router.push("/product/upload") }}>
+                    <Badge color="error">
+                        <FileUploadIcon />
                     </Badge>
                 </IconButton>
-                <p>Messages</p>
+                <p>Upload</p>
             </MenuItem>
             <MenuItem onClick={() => { handleMenuClose(); signOut() }}>
                 <IconButton
@@ -246,10 +251,11 @@ export default function AppHeader() {
                                         display: { xs: 'none', md: 'flex' }
 
                                     }}>
-                                        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-                                            <Badge badgeContent={4} color="error">
-                                                <MailIcon />
-                                            </Badge>
+                                        <IconButton size="small" aria-label="show 4 new mails" color="inherit">
+                                            <Link href={"/product/upload"} style={{
+                                                textDecoration: 'none',
+                                                color: "white"
+                                            }}>Upload</Link>
                                         </IconButton>
                                         <IconButton
                                             size="large"
@@ -260,7 +266,7 @@ export default function AppHeader() {
                                             onClick={handleProfileMenuOpen}
                                             color="inherit"
                                         >
-                                            <Avatar {...stringAvatar('Kent Dodds')} sx={{ color: "#fb9555", backgroundColor: "white", width: 28, height: 28 }} />
+                                            <Avatar {...stringAvatar(session.user.name || 'Admin Admin')} sx={{ color: "#fb9555", backgroundColor: "white", width: 28, height: 28 }} />
                                         </IconButton>
                                     </Box>
                                     <Box sx={{ display: { xs: 'flex', md: 'none' } }}>

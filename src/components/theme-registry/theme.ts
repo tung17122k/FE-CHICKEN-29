@@ -46,7 +46,15 @@ const theme = createTheme({
         }),
       },
     },
+    MuiTabs: {
+      styleOverrides: {
+        indicator: {
+          backgroundColor: "#fb9555"
+        }
+      }
+    }
   },
+
 });
 
 export default theme;
