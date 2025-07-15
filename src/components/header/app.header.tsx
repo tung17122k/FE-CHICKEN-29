@@ -82,7 +82,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function AppHeader() {
     const { data: session } = useSession();
     const router = useRouter();
-    console.log("session", session);
+    // console.log("session", session);
 
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -230,9 +230,12 @@ export default function AppHeader() {
                             variant="h6"
                             noWrap
                             component="div"
-                            sx={{ display: { xs: 'none', sm: 'block' } }}
+                            onClick={() => {
+                                router.push('/')
+                            }}
+                            sx={{ display: { xs: 'none', sm: 'block' }, cursor: "pointer" }}
                         >
-                            MUI
+                            Chicken29
                         </Typography>
                         <Search>
                             <SearchIconWrapper>

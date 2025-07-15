@@ -1,12 +1,13 @@
 'use client'
 
-import { Button, CardMedia, Container, FormControl, Grid, Input, InputAdornment, InputLabel, MenuItem, OutlinedInput, TextField } from "@mui/material"
+import { Alert, AlertTitle, Button, CardMedia, Container, FormControl, Grid, Input, InputAdornment, InputLabel, MenuItem, OutlinedInput, Snackbar, SnackbarCloseReason, TextField } from "@mui/material"
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { styled } from '@mui/material/styles';
 import { useState } from "react";
 import { sendRequestDefault } from "@/utils/api";
 import { useSession } from 'next-auth/react';
 import { useCategory } from "@/context/category.context";
+import { useToast } from "@/utils/toast";
 
 interface INewTrack {
     name: string,
@@ -66,6 +67,9 @@ function InputFileUpload(props: IProps) {
 const UploadForm = () => {
     const [file, setFile] = useState<File>();
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+    // const [message, setMessage] = useState<string>("")
+    // const [open, setOpen] = useState<boolean>(false)
+    const toast = useToast()
 
 
     const { data: session } = useSession();
@@ -85,6 +89,7 @@ const UploadForm = () => {
 
     const handleUpload = async () => {
         if (!file) {
+            // alert("chưa upload hình ảnh")
             return
         }
         const formData = new FormData();
@@ -101,8 +106,35 @@ const UploadForm = () => {
             body: formData
         })
         // console.log("res", res);
+        if (res.data) {
+            // setOpen(true)
+            // setMessage("Tạo mới sản phẩm thành công!")
+            toast.success("Tạo mới sản phẩm thành công!")
+
+        } else {
+            // setOpen(true)
+
+            // setMessage(Array.isArray(res?.message)
+            //     ? res.message.map((err) => err.message).join('\n')
+            //     : res?.message || 'Validate error');
+            let message = Array.isArray(res?.message)
+                ? res.message.map((err) => err.message).join('\n')
+                : res?.message || 'Validate error'
+            toast.error(message)
+        }
 
     }
+
+    // const handleClose = (
+    //     event?: React.SyntheticEvent | Event,
+    //     reason?: SnackbarCloseReason,
+    // ) => {
+    //     if (reason === 'clickaway') {
+    //         return;
+    //     }
+
+    //     setOpen(false);
+    // };
 
 
     return (
@@ -175,6 +207,7 @@ const UploadForm = () => {
                     <Button
                         variant="outlined"
                         onClick={() => handleUpload()}
+                        disabled={file ? false : true}
                         sx={{
                             mt: 5,
                             color: 'orange.main',
@@ -182,6 +215,14 @@ const UploadForm = () => {
                             borderColor: 'orange.main'
                         }}>Create</Button>
                 </Grid>
+                {/* <Snackbar open={open} autoHideDuration={5000} onClose={handleClose} anchorOrigin={{ vertical: "top", horizontal: "center" }}>
+                    <Alert
+                        onClose={handleClose}
+                        severity={message === "Tạo mới sản phẩm thành công!" ? `success` : `error`}
+                    >
+                        <AlertTitle>{message}</AlertTitle>
+                    </Alert>
+                </Snackbar> */}
             </Grid>
         </Container>
     )
