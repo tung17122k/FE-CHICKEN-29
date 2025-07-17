@@ -12,6 +12,11 @@ declare global {
         "sold": number,
         "categoryId": number
     }
+    interface ICart {
+        "id": number,
+        "userId": number,
+        "sum": number
+    }
 
     interface ICategory {
         "id": number,
@@ -23,7 +28,7 @@ declare global {
     interface IRequest {
         url: string;
         method: string;
-        body?: { [key: string]: any };
+        body?: Record<string, any>;
         queryParams?: any;
         useCredentials?: boolean;
         headers?: any;
@@ -46,5 +51,6 @@ declare global {
         },
         result: T[]
     }
+
 
 }

@@ -54,7 +54,7 @@ export const sendRequestDefault = async <T>(props: IRequest) => {
         method: method,
         // by default setting the content-type to be json type
         headers: new Headers({ ...headers }),
-        body: body ? body : null,
+        body: body ? JSON.stringify(body) : undefined,
         ...nextOption
     };
     if (useCredentials) options.credentials = "include";
@@ -69,10 +69,12 @@ export const sendRequestDefault = async <T>(props: IRequest) => {
         } else {
             return res.json().then(function (json) {
                 // to be able to access error status when you catch the error 
+
                 return {
                     statusCode: res.status,
                     message: json?.message ?? "",
                     error: json?.error ?? ""
+
                 } as T;
             });
         }

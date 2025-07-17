@@ -5,6 +5,10 @@ import AddIcon from '@mui/icons-material/Add';
 import { useState } from "react";
 import ModalMenu from "../modal/modal.menu";
 import Link from "next/link";
+import { sendRequestDefault } from "@/utils/api";
+import { useSession } from 'next-auth/react';
+import { useToast } from "@/utils/toast";
+import ModalInput from "../modal/modal.input";
 
 
 interface IProps {
@@ -16,7 +20,16 @@ const MainSlider = (props: IProps) => {
     // console.log("check data", props.data);
     const { data, title } = props
     const [modalOpen, setModalOpen] = useState<boolean>(false)
+    const [modalInputOpen, setModalInputOpen] = useState<boolean>(false)
+    const [inputValue, setInputValue] = useState<number>(1)
+    const [selectedProduct, setSelectedProduct] = useState<IProductCategory>()
+    // console.log("selected", selectedProduct);
+
+
+
     const [item, setItem] = useState<IProductCategory | undefined>()
+    const { data: session } = useSession();
+    const toast = useToast()
 
     const handleOpenModal = () => {
         setModalOpen(true)
@@ -25,10 +38,37 @@ const MainSlider = (props: IProps) => {
         setModalOpen(false)
     }
 
+
+
     const handleClickItem = (item: IProductCategory) => {
         setItem(item);
         handleOpenModal();
     };
+
+    const handleSelectProduct = async (item: IProductCategory) => {
+        setModalInputOpen(true)
+        setSelectedProduct(item)
+        // console.log("item", item);
+    }
+
+    const handleSubmitInputValue = async (quantity: number) => {
+        const res = await sendRequestDefault<IBackendRes<ICart>>({
+            url: `http://localhost:8080/cart`,
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session?.access_token}` },
+            body: {
+                product: [
+                    { productId: selectedProduct?.id, quantity: inputValue }
+                ]
+            }
+        })
+        console.log("res", res);
+        if (res.data) {
+            toast.success(res.message)
+        } else {
+            toast.error(res.message)
+        }
+    }
 
     return (
         <div>
@@ -38,11 +78,6 @@ const MainSlider = (props: IProps) => {
                     return (
                         <Grid item xs={6} md={4} key={item.id}>
                             <Card sx={{ position: 'relative', borderRadius: 2 }}>
-                                {/* <Badge
-                                    badgeContent={1}
-                                    color="primary"
-                                    sx={{ position: 'absolute', top: 12, right: 12 }}
-                                /> */}
                                 <CardMedia
                                     component="img"
                                     height="100"
@@ -61,7 +96,7 @@ const MainSlider = (props: IProps) => {
                                         <Typography variant="body2" color="error">
                                             {item?.price.toLocaleString('vi-VN') + 'đ'}
                                         </Typography>
-                                        <IconButton size="small" sx={{ backgroundColor: '#ff6600', color: 'white' }} >
+                                        <IconButton size="small" sx={{ backgroundColor: '#ff6600', color: 'white' }} onClick={() => handleSelectProduct(item)}>
                                             <AddIcon fontSize="small" />
                                         </IconButton>
                                     </Box>
@@ -73,6 +108,9 @@ const MainSlider = (props: IProps) => {
             </Grid>
             {
                 modalOpen && <ModalMenu item={item} modalOpen={modalOpen} handleCloseModal={handleCloseModal} />
+            }
+            {
+                modalInputOpen && <ModalInput modalInputOpen={modalInputOpen} setModalInputOpen={setModalInputOpen} onSubmit={handleSubmitInputValue} />
             }
         </div>
     )
