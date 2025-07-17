@@ -21,7 +21,6 @@ const MainSlider = (props: IProps) => {
     const { data, title } = props
     const [modalOpen, setModalOpen] = useState<boolean>(false)
     const [modalInputOpen, setModalInputOpen] = useState<boolean>(false)
-    const [inputValue, setInputValue] = useState<number>(1)
     const [selectedProduct, setSelectedProduct] = useState<IProductCategory>()
     // console.log("selected", selectedProduct);
 
@@ -58,11 +57,11 @@ const MainSlider = (props: IProps) => {
             headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session?.access_token}` },
             body: {
                 product: [
-                    { productId: selectedProduct?.id, quantity: inputValue }
+                    { productId: selectedProduct?.id, quantity: quantity }
                 ]
             }
         })
-        console.log("res", res);
+        // console.log("res", res);
         if (res.data) {
             toast.success(res.message)
         } else {

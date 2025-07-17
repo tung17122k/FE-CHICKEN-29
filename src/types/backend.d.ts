@@ -18,6 +18,22 @@ declare global {
         "sum": number
     }
 
+    interface ICartDetailItem {
+        "id": numbber,
+        "cartId": number,
+        "productId": number,
+        "quantity": number,
+        "price": number,
+        "product": IProductCategory
+    }
+
+    interface ICartResponse extends ICart {
+        cartDetails: ICartDetailItem[]
+    }
+
+
+
+
     interface ICategory {
         "id": number,
         "name": string,
