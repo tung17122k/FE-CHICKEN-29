@@ -13,7 +13,8 @@ import ModalInput from "../modal/modal.input";
 
 interface IProps {
     data: IProductCategory[],
-    title: string
+    title: string,
+
 }
 
 const MainSlider = (props: IProps) => {
@@ -106,7 +107,7 @@ const MainSlider = (props: IProps) => {
                 })}
             </Grid>
             {
-                modalOpen && <ModalMenu item={item} modalOpen={modalOpen} handleCloseModal={handleCloseModal} />
+                modalOpen && <ModalMenu item={item} modalOpen={modalOpen} handleCloseModal={handleCloseModal} handleSubmitInputValue={handleSubmitInputValue} />
             }
             {
                 modalInputOpen && <ModalInput modalInputOpen={modalInputOpen} setModalInputOpen={setModalInputOpen} onSubmit={handleSubmitInputValue} />

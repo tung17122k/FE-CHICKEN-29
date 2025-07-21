@@ -9,19 +9,46 @@ import { useEffect, useState } from 'react';
 
 
 interface IProps {
-    cart: ICartResponse
+    cart: ICartResponse,
+    setCartDetails: React.Dispatch<React.SetStateAction<ICartDetailItem[]>>;
+    cartDetails: ICartDetailItem[]
 }
 
 const CartSlider = (props: IProps) => {
     const theme = useTheme();
     const [quantity, setQuantity] = useState<number>(1)
     const cart = props.cart
+    const setCartDetails = props.setCartDetails
+    const cartDetails = props.cartDetails
+    // console.log("cartDetail", cartDetails);
+
+
+
+    const handleIncrement = (productId: number) => {
+        setCartDetails(prev =>
+            prev.map(item =>
+                item.productId === productId
+                    ? { ...item, quantity: item.quantity + 1 }
+                    : item
+            )
+        );
+    }
+
+    const handleDecrement = (productId: number) => {
+        setCartDetails(prev =>
+            prev.map(item =>
+                item.productId === productId && item.quantity > 0
+                    ? { ...item, quantity: item.quantity - 1 }
+                    : item
+            )
+        );
+    };
 
 
     return (
         <>
             {
-                cart.cartDetails.map(item => {
+                cartDetails.map(item => {
                     return (
                         <Card sx={{ display: 'flex', marginBottom: '20px' }} key={item.id}>
                             <CardMedia
@@ -47,15 +74,25 @@ const CartSlider = (props: IProps) => {
                                 <Box sx={{ display: 'flex', alignItems: 'center', pl: 1, pb: 1 }}>
                                     <IconButton sx={{
                                         color: "orange.main"
-                                    }}>
+                                    }}
+                                        onClick={() => handleDecrement(item.productId)}
+                                    >
                                         {theme.direction === 'rtl' ? <RemoveIcon /> : <RemoveIcon />}
                                     </IconButton>
                                     <TextField
                                         type="number"
-                                        // value={quantity}
-                                        // onChange={handleChange}
-                                        inputProps={{ min: 1 }}
-                                        defaultValue={item.quantity}
+                                        inputProps={{ min: 0 }}
+                                        value={item.quantity}
+                                        onChange={(e) => {
+                                            const newQuantity = Math.max(0, Number(e.target.value));
+                                            setCartDetails(prev =>
+                                                prev.map(cartItem =>
+                                                    cartItem.productId === item.productId
+                                                        ? { ...cartItem, quantity: newQuantity }
+                                                        : cartItem
+                                                )
+                                            );
+                                        }}
                                         size="small"
                                         sx={{
                                             width: 60,
@@ -68,7 +105,9 @@ const CartSlider = (props: IProps) => {
                                     />
                                     <IconButton sx={{
                                         color: "orange.main"
-                                    }}>
+                                    }}
+                                        onClick={() => handleIncrement(item.productId)}
+                                    >
                                         {theme.direction === 'rtl' ? <AddIcon /> : <AddIcon />}
                                     </IconButton>
                                 </Box>

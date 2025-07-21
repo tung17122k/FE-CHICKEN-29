@@ -3,12 +3,13 @@ import { Box, Button, Modal, Slide, Typography } from "@mui/material"
 interface IProps {
     modalOpen: boolean,
     handleCloseModal: () => void,
-    item?: IProductCategory
+    item?: IProductCategory,
+    handleSubmitInputValue: (quantity: number) => Promise<void>
 }
 
 
 const ModalMenu = (props: IProps) => {
-    const { item, modalOpen, handleCloseModal } = props
+    const { item, modalOpen, handleCloseModal, handleSubmitInputValue } = props
 
     return (
         <div>
@@ -45,7 +46,7 @@ const ModalMenu = (props: IProps) => {
                         </Typography>
                         <Box mt={2} display="flex" justifyContent="space-between">
                             <Button variant="outlined" onClick={() => handleCloseModal()}>Đóng</Button>
-                            <Button variant="contained" color="warning">Thêm vào giỏ hàng</Button>
+                            <Button variant="contained" color="warning" onClick={() => { handleSubmitInputValue(1); handleCloseModal() }}>Thêm vào giỏ hàng</Button>
                         </Box>
                     </Box>
                 </Slide>

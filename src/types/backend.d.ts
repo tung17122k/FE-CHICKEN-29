@@ -19,7 +19,7 @@ declare global {
     }
 
     interface ICartDetailItem {
-        "id": numbber,
+        "id": number,
         "cartId": number,
         "productId": number,
         "quantity": number,
