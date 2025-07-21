@@ -31,6 +31,18 @@ declare global {
         cartDetails: ICartDetailItem[]
     }
 
+    interface IOrderResponse {
+        id: number,
+        paymentMethod: string,
+        paymentRef: null,
+        paymentStatus: string,
+        receiverAddress: string,
+        receiverName: string,
+        receiverPhone: string,
+        status: string,
+        totalPrice: number,
+        userId: number
+    }
 
 
 
@@ -67,6 +79,7 @@ declare global {
         },
         result: T[]
     }
+
 
 
 }

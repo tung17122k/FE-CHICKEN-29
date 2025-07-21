@@ -9,7 +9,7 @@ import { useSession } from 'next-auth/react';
 import { useCategory } from "@/context/category.context";
 import { useToast } from "@/utils/toast";
 
-interface INewTrack {
+interface INewProduct {
     name: string,
     description: string,
     quantity: string,
@@ -77,7 +77,7 @@ const UploadForm = () => {
 
 
 
-    const [infor, setInfor] = useState<INewTrack>({
+    const [infor, setInfor] = useState<INewProduct>({
         name: "",
         description: "",
         quantity: "",
