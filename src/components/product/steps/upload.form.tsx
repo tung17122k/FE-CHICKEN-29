@@ -100,7 +100,7 @@ const UploadForm = () => {
         });
 
         const res = await sendRequestDefault<IBackendRes<IProductCategory[]>>({
-            url: `http://localhost:8080/product`,
+            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}product`,
             method: 'POST',
             headers: { Authorization: `Bearer ${session?.access_token}` },
             body: formData
@@ -188,7 +188,6 @@ const UploadForm = () => {
                         sx={{
                             mt: 3
                         }}
-
                         select
                         label="Category"
                         fullWidth

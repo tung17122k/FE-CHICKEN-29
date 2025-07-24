@@ -18,7 +18,7 @@ export default async function HomePage() {
 
 
   const friedChicken = await sendRequest<IBackendRes<IProductCategory[]>>({
-    url: `http://localhost:8080/product`,
+    url: `${process.env.NEXT_PUBLIC_BACKEND_URL}product`,
     method: 'GET',
     queryParams: { category: "FRIED_CHICKEN" }
   })
@@ -27,7 +27,7 @@ export default async function HomePage() {
 
 
   const lightFood = await sendRequest<IBackendRes<IProductCategory[]>>({
-    url: `http://localhost:8080/product`,
+    url: `${process.env.NEXT_PUBLIC_BACKEND_URL}product`,
     method: 'GET',
     queryParams: {
       category: 'LIGHT_FOOD'
@@ -35,14 +35,14 @@ export default async function HomePage() {
 
   })
   const drinks = await sendRequest<IBackendRes<IProductCategory[]>>({
-    url: `http://localhost:8080/product`,
+    url: `${process.env.NEXT_PUBLIC_BACKEND_URL}product`,
     method: 'GET',
     queryParams: {
       category: 'DRINKS'
     }
   })
   const burger = await sendRequest<IBackendRes<IProductCategory[]>>({
-    url: `http://localhost:8080/product`,
+    url: `${process.env.NEXT_PUBLIC_BACKEND_URL}product`,
     method: 'GET',
     queryParams: {
       category: 'BURGER'
@@ -50,7 +50,7 @@ export default async function HomePage() {
   })
 
   const categoryList = await sendRequest<IBackendRes<ICategory[]>>({
-    url: `http://localhost:8080/category`,
+    url: `${process.env.NEXT_PUBLIC_BACKEND_URL}category`,
     method: 'GET',
   })
   // console.log("drink", drinks.data![0].categoryId);

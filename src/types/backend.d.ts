@@ -31,7 +31,9 @@ declare global {
         cartDetails: ICartDetailItem[]
     }
 
-    interface IOrderResponse {
+
+
+    interface IOrderData {
         id: number,
         paymentMethod: string,
         paymentRef: null,
@@ -43,6 +45,12 @@ declare global {
         totalPrice: number,
         userId: number
     }
+
+    interface IOrderResponse {
+        orderDetails: IOrderData,
+        vnpUrl: string | null
+    }
+
 
 
 

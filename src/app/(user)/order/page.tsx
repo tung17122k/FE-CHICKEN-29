@@ -7,7 +7,7 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 const OrderPage = async () => {
     const session = await getServerSession(authOptions);
     const res = await sendRequestDefault<IBackendRes<ICartResponse>>({
-        url: `http://localhost:8080/cart`,
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}cart`,
         method: 'GET',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session?.access_token}` },
     })

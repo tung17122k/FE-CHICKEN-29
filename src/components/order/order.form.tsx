@@ -1,6 +1,6 @@
 'use client'
 
-import { Box, Button, Card, CardContent, CardMedia, Divider, FormControl, Grid, Input, InputAdornment, InputLabel, Stack, TextField, Typography } from "@mui/material"
+import { Box, Button, Card, CardContent, CardMedia, Divider, FormControl, FormControlLabel, Grid, Input, InputAdornment, InputLabel, MenuItem, Radio, RadioGroup, Select, Stack, TextField, Typography } from "@mui/material"
 import PersonIcon from '@mui/icons-material/Person';
 import HomeIcon from '@mui/icons-material/Home';
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
@@ -13,12 +13,19 @@ interface INewOrder {
     receiverName: string,
     receiverAddress: string,
     receiverPhone: string,
+    paymentMethod: 'BANKING' | 'COD',
+    bankCode: string
 }
 
 
 interface IProps {
     data: ICartDetailItem[]
 }
+
+const paymentMethod = [
+    { value: 'BANKING', label: 'Chuyển khoản ngân hàng (VNPay)' },
+    { value: 'COD', label: 'Thanh toán khi nhận hàng (COD)' }
+]
 
 const OrderForm = (props: IProps) => {
     const { data: session } = useSession();
@@ -30,6 +37,8 @@ const OrderForm = (props: IProps) => {
         receiverName: '',
         receiverAddress: '',
         receiverPhone: '',
+        paymentMethod: 'BANKING',
+        bankCode: ''
     });
 
     useEffect(() => {
@@ -38,24 +47,37 @@ const OrderForm = (props: IProps) => {
                 receiverName: session.user.name || '',
                 receiverAddress: session.user.address || '',
                 receiverPhone: session.user.phone || '',
+                paymentMethod: 'BANKING',
+                bankCode: ''
             });
         }
     }, [session]);
+    console.log("infor", infor);
 
     const handlePlaceOrder = async (infor: INewOrder) => {
+        console.log("infor", infor);
+
         const res = await sendRequestDefault<IBackendRes<IOrderResponse>>({
             url: `http://localhost:8080/checkout`,
             method: 'POST',
             headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session?.access_token}` },
             body: infor
         })
+        // console.log("res", res);
+
         if (res.data) {
-            toast.success("Đặt hàng thành công!")
+            toast.success("Đặt hàng thành công!");
+            if (res.data.vnpUrl !== null) {
+                setTimeout(() => {
+                    window.location.href = res.data!.vnpUrl as string;
+                }, 1000)
+            }
         } else {
             toast.error("Đã có lỗi xảy ra!")
         }
-
     }
+
+
 
 
 
@@ -155,18 +177,65 @@ const OrderForm = (props: IProps) => {
                             />
                         </FormControl>
 
+                        <TextField
+                            sx={{
+                                mt: 3
+                            }}
+                            select
+                            label="Phương thức thanh toán"
+                            fullWidth
+                            variant="standard"
+                            value={infor.paymentMethod}
+                            onChange={(e) => {
+                                setInfor({ ...infor, paymentMethod: e.target.value as 'BANKING' | 'COD' })
+                            }}
+                        >
+                            {paymentMethod.map((option: any) => (
+                                <MenuItem key={option.value} value={option.value}>
+                                    {option.value}
+                                </MenuItem>
+                            ))}
+                        </TextField>
+
+
+                        {infor.paymentMethod === 'BANKING' && (
+                            <FormControl sx={{ m: 1 }}>
+                                <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                                    Chọn Phương thức thanh toán:
+                                </Typography>
+                                <RadioGroup
+                                    defaultValue="VNPAYQR"
+                                    name="bankCode"
+                                    onChange={(e) => {
+                                        setInfor({ ...infor, bankCode: e.target.value });
+                                    }}
+                                >
+                                    <FormControlLabel value="" control={<Radio />} label="Cổng thanh toán VNPAYQR" />
+                                    <FormControlLabel value="VNPAYQR" control={<Radio />} label="Thanh toán qua ứng dụng hỗ trợ VNPAYQR" />
+                                    <FormControlLabel value="VNBANK" control={<Radio />} label="Thanh toán qua ATM - Tài khoản ngân hàng nội địa" />
+                                    <FormControlLabel value="INTCARD" control={<Radio />} label="Thanh toán qua thẻ quốc tế" />
+                                </RadioGroup>
+                            </FormControl>
+                        )}
                         <Button
                             fullWidth
                             variant="outlined"
                             sx={{
-                                mt: 5,
+                                mt: {
+                                    xs: 1,
+                                    md: 5,
+                                },
+                                mb: 10,
                                 color: 'orange.main',
                                 border: '1px solid',
                                 borderColor: 'orange.main',
                             }}
-                            onClick={() => handlePlaceOrder(infor)}
+                            onClick={() => {
+                                handlePlaceOrder(infor);
+                            }
+                            }
                         >
-                            Xác nhận thanh toán
+                            Xác nhận đặt hàng
                         </Button>
                     </Grid>
                 </Grid>

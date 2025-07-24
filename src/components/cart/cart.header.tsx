@@ -28,7 +28,7 @@ const CartHeader = (props: IProps) => {
         }));
 
         const res = await sendRequestDefault<IBackendRes<ICart>>({
-            url: `http://localhost:8080/cart`,
+            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}cart`,
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session?.access_token}` },
             body: {

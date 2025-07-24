@@ -53,7 +53,7 @@ const MainSlider = (props: IProps) => {
 
     const handleSubmitInputValue = async (quantity: number) => {
         const res = await sendRequestDefault<IBackendRes<ICart>>({
-            url: `http://localhost:8080/cart`,
+            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}cart`,
             method: 'POST',
             headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session?.access_token}` },
             body: {

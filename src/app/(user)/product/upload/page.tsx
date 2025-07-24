@@ -7,7 +7,7 @@ import { Container } from "@mui/material"
 const UploadPage = async () => {
 
     const res = await sendRequest<IBackendRes<ICategory[]>>({
-        url: `http://localhost:8080/category`,
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}category`,
         method: 'GET',
     })
     // console.log("res", res);
