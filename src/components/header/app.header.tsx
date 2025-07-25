@@ -244,6 +244,15 @@ export default function AppHeader() {
                             <StyledInputBase
                                 placeholder="Search…"
                                 inputProps={{ 'aria-label': 'search' }}
+                                onKeyDown={(e: any) => {
+                                    if (e.key === 'Enter') {
+                                        e.preventDefault();
+                                        const searchValue = e.target.value;
+                                        if (searchValue.trim()) {
+                                            router.push(`/search?query=${encodeURIComponent(searchValue)}`);
+                                        }
+                                    }
+                                }}
                             />
                         </Search>
                         <Box sx={{ flexGrow: 1 }} />
