@@ -47,7 +47,7 @@ export default function AppMenuFooter() {
                                 router.push("/cart");
                                 break;
                             case 2:
-                                router.push("/restaurants");
+                                router.push("/order-history");
                                 break;
                         }
                     }}
@@ -55,7 +55,7 @@ export default function AppMenuFooter() {
 
                     <MuiBottomNavigationAction label="Menu" icon={<DescriptionIcon />} onClick={() => handleRedirectHome()} />
                     <MuiBottomNavigationAction label="Giỏ hàng" icon={<ShoppingCartIcon />} />
-                    <MuiBottomNavigationAction label="Nhà hàng" icon={<StorefrontIcon />} />
+                    <MuiBottomNavigationAction label="Lịch sử mua hàng" icon={<StorefrontIcon />} />
 
 
                 </BottomNavigation>

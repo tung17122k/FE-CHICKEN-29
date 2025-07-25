@@ -33,6 +33,7 @@ declare global {
 
 
 
+
     interface IOrderData {
         id: number,
         paymentMethod: string,
@@ -49,6 +50,24 @@ declare global {
     interface IOrderResponse {
         orderDetails: IOrderData,
         vnpUrl: string | null
+    }
+
+    interface IOrderDetail {
+        id: number,
+        price: number,
+        quantity: number,
+        productId: number,
+        orderId: number,
+        product: IProductCategory
+    }
+    interface IPaymentMethod {
+        id: number,
+        name: string,
+    }
+
+    interface IOrderHistory extends IOrderData {
+        orderDetails: IOrderDetail[],
+        paymentMethod: IPaymentMethod
     }
 
 

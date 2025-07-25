@@ -71,7 +71,7 @@ const CartHeader = (props: IProps) => {
                 onClick={() => {
                     handleUpdateCart(cartDetails)
                 }}
-            >Thanh toán
+            >Xác nhận đơn hàng
             </Button>
         </div>
     )

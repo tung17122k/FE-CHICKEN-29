@@ -48,74 +48,80 @@ const CartSlider = (props: IProps) => {
     return (
         <>
             {
-                cartDetails.map(item => {
-                    return (
-                        <Card sx={{ display: 'flex', marginBottom: '20px' }} key={item.id}>
-                            <CardMedia
-                                component="img"
-                                sx={{ width: 151, height: 151, objectFit: "cover" }}
-                                image={`http://localhost:3000/api?product=${item?.product.image}`}
-                            />
-                            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                                <CardContent sx={{ flex: '1 0 auto' }}>
-                                    <Typography component="div" variant="h5" sx={{
-                                        fontWeight: '500'
-                                    }}>
-                                        {item.product.name}
-                                    </Typography>
-                                    <Typography
-                                        variant="subtitle1"
-                                        component="div"
-                                        sx={{ color: 'orange.main', fontWeight: '500' }}
-                                    >
-                                        {item.price}.đ
-                                    </Typography>
-                                </CardContent>
-                                <Box sx={{ display: 'flex', alignItems: 'center', pl: 1, pb: 1 }}>
-                                    <IconButton sx={{
-                                        color: "orange.main"
-                                    }}
-                                        onClick={() => handleDecrement(item.productId)}
-                                    >
-                                        {theme.direction === 'rtl' ? <RemoveIcon /> : <RemoveIcon />}
-                                    </IconButton>
-                                    <TextField
-                                        type="number"
-                                        inputProps={{ min: 0 }}
-                                        value={item.quantity}
-                                        onChange={(e) => {
-                                            const newQuantity = Math.max(0, Number(e.target.value));
-                                            setCartDetails(prev =>
-                                                prev.map(cartItem =>
-                                                    cartItem.productId === item.productId
-                                                        ? { ...cartItem, quantity: newQuantity }
-                                                        : cartItem
-                                                )
-                                            );
-                                        }}
-                                        size="small"
-                                        sx={{
-                                            width: 60,
-                                            mx: 1,
-                                            '& input': {
-                                                textAlign: 'center',
-                                                p: 0.5,
-                                            },
-                                        }}
-                                    />
-                                    <IconButton sx={{
-                                        color: "orange.main"
-                                    }}
-                                        onClick={() => handleIncrement(item.productId)}
-                                    >
-                                        {theme.direction === 'rtl' ? <AddIcon /> : <AddIcon />}
-                                    </IconButton>
-                                </Box>
-                            </Box>
+                cartDetails.length === 0 ? <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh' }}>
+                    <Typography variant="h5" color="textSecondary" >
+                        Giỏ hàng của bạn đang trống
+                    </Typography>
 
-                        </Card>
-                    )
-                })
+                </div> :
+                    cartDetails.map(item => {
+                        return (
+                            <Card sx={{ display: 'flex', marginBottom: '20px' }} key={item.id}>
+                                <CardMedia
+                                    component="img"
+                                    sx={{ width: 151, height: 151, objectFit: "cover" }}
+                                    image={`http://localhost:3000/api?product=${item?.product.image}`}
+                                />
+                                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                                    <CardContent sx={{ flex: '1 0 auto' }}>
+                                        <Typography component="div" variant="h5" sx={{
+                                            fontWeight: '500'
+                                        }}>
+                                            {item.product.name}
+                                        </Typography>
+                                        <Typography
+                                            variant="subtitle1"
+                                            component="div"
+                                            sx={{ color: 'orange.main', fontWeight: '500' }}
+                                        >
+                                            {item.price}.đ
+                                        </Typography>
+                                    </CardContent>
+                                    <Box sx={{ display: 'flex', alignItems: 'center', pl: 1, pb: 1 }}>
+                                        <IconButton sx={{
+                                            color: "orange.main"
+                                        }}
+                                            onClick={() => handleDecrement(item.productId)}
+                                        >
+                                            {theme.direction === 'rtl' ? <RemoveIcon /> : <RemoveIcon />}
+                                        </IconButton>
+                                        <TextField
+                                            type="number"
+                                            inputProps={{ min: 0 }}
+                                            value={item.quantity}
+                                            onChange={(e) => {
+                                                const newQuantity = Math.max(0, Number(e.target.value));
+                                                setCartDetails(prev =>
+                                                    prev.map(cartItem =>
+                                                        cartItem.productId === item.productId
+                                                            ? { ...cartItem, quantity: newQuantity }
+                                                            : cartItem
+                                                    )
+                                                );
+                                            }}
+                                            size="small"
+                                            sx={{
+                                                width: 60,
+                                                mx: 1,
+                                                '& input': {
+                                                    textAlign: 'center',
+                                                    p: 0.5,
+                                                },
+                                            }}
+                                        />
+                                        <IconButton sx={{
+                                            color: "orange.main"
+                                        }}
+                                            onClick={() => handleIncrement(item.productId)}
+                                        >
+                                            {theme.direction === 'rtl' ? <AddIcon /> : <AddIcon />}
+                                        </IconButton>
+                                    </Box>
+                                </Box>
+
+                            </Card>
+                        )
+                    })
             }
 
         </>
