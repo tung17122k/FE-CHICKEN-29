@@ -4,12 +4,12 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
-import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import { Paper } from '@mui/material';
 import { styled } from "@mui/material/styles";
-
+import { useRouter } from 'next/navigation'
+import DescriptionIcon from '@mui/icons-material/Description';
 
 // https://stackoverflow.com/questions/54375096/styling-bottomnavigation-in-react-js-material-ui
 
@@ -21,11 +21,16 @@ const MuiBottomNavigationAction = styled(BottomNavigationAction)(`
   `);
 
 export default function AppMenuFooter() {
+    const router = useRouter();
     const [value, setValue] = React.useState(0);
+
+    const handleRedirectHome = () => {
+        router.push("/")
+    }
 
     return (
         <Paper
-            sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }}
+            sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 1200 }}
             elevation={3}
         >
             <Box sx={{ width: '100%' }}>
@@ -34,11 +39,25 @@ export default function AppMenuFooter() {
                     value={value}
                     onChange={(event, newValue) => {
                         setValue(newValue);
+                        switch (newValue) {
+                            case 0:
+                                handleRedirectHome();
+                                break;
+                            case 1:
+                                router.push("/cart");
+                                break;
+                            case 2:
+                                router.push("/order-history");
+                                break;
+                        }
                     }}
                 >
-                    <MuiBottomNavigationAction label="Menu" icon={<RestaurantMenuIcon />} />
+
+                    <MuiBottomNavigationAction label="Menu" icon={<DescriptionIcon />} onClick={() => handleRedirectHome()} />
                     <MuiBottomNavigationAction label="Giỏ hàng" icon={<ShoppingCartIcon />} />
-                    <MuiBottomNavigationAction label="Nhà hàng" icon={<StorefrontIcon />} />
+                    <MuiBottomNavigationAction label="Lịch sử mua hàng" icon={<StorefrontIcon />} />
+
+
                 </BottomNavigation>
             </Box>
         </Paper>

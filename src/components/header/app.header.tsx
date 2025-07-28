@@ -15,13 +15,22 @@ import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
-import { Container } from '@mui/material';
+import { Button, Container } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { useSession, signOut } from "next-auth/react"
+// import { signIn } from "next-auth/react"
+import { useRouter } from 'next/navigation'
+import Link from 'next/link';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
+
+
+
 
 
 function stringAvatar(name: string) {
+    // const { data: session } = useSession();
     return {
         children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
     };
@@ -71,6 +80,11 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function AppHeader() {
+    const { data: session } = useSession();
+    const router = useRouter();
+    // console.log("session", session);
+
+
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
         React.useState<null | HTMLElement>(null);
@@ -95,6 +109,10 @@ export default function AppHeader() {
         setMobileMoreAnchorEl(event.currentTarget);
     };
 
+    const signIn = () => {
+        router.push("/auth/signin")
+    }
+
     const menuId = 'primary-search-account-menu';
     const renderMenu = (
         <Menu
@@ -112,8 +130,30 @@ export default function AppHeader() {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+            <Box sx={{
+                "> a": {
+                    color: 'unset',
+                    textDecoration: 'unset',
+                }
+            }}>
+                <Button onClick={() => { router.push("/profile") }} sx={{
+                    color: 'inherit',
+                }}>
+                    <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+                </Button>
+            </Box>
+            <Box sx={{
+                "> a": {
+                    color: 'unset',
+                    textDecoration: 'unset',
+                }
+            }}>
+                <Button sx={{
+                    color: 'inherit',
+                }}>
+                    <MenuItem onClick={() => { handleMenuClose(); signOut() }}>Logout</MenuItem>
+                </Button>
+            </Box>
         </Menu>
     );
 
@@ -136,26 +176,26 @@ export default function AppHeader() {
 
         >
             <MenuItem>
-                <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-                    <Badge badgeContent={4} color="error">
-                        <MailIcon />
+                <IconButton size="large" aria-label="show 4 new mails" color="inherit" onClick={() => { router.push("/product/upload") }}>
+                    <Badge color="error">
+                        <FileUploadIcon />
                     </Badge>
                 </IconButton>
-                <p>Messages</p>
+                <p>Upload</p>
             </MenuItem>
-            <MenuItem>
+            <MenuItem onClick={() => { handleMenuClose(); signOut() }}>
                 <IconButton
                     size="large"
                     aria-label="show 17 new notifications"
                     color="inherit"
                 >
-                    <Badge badgeContent={17} color="error">
-                        <NotificationsIcon />
+                    <Badge >
+                        <LogoutIcon />
                     </Badge>
                 </IconButton>
-                <p>Notifications</p>
+                <p>Logout</p>
             </MenuItem>
-            <MenuItem onClick={handleProfileMenuOpen}>
+            <MenuItem onClick={() => { router.push('/profile') }}>
                 <IconButton
                     size="large"
                     aria-label="account of current user"
@@ -190,9 +230,12 @@ export default function AppHeader() {
                             variant="h6"
                             noWrap
                             component="div"
-                            sx={{ display: { xs: 'none', sm: 'block' } }}
+                            onClick={() => {
+                                router.push('/')
+                            }}
+                            sx={{ display: { xs: 'none', sm: 'block' }, cursor: "pointer" }}
                         >
-                            MUI
+                            Chicken29
                         </Typography>
                         <Search>
                             <SearchIconWrapper>
@@ -201,48 +244,67 @@ export default function AppHeader() {
                             <StyledInputBase
                                 placeholder="Search…"
                                 inputProps={{ 'aria-label': 'search' }}
+                                onKeyDown={(e: any) => {
+                                    if (e.key === 'Enter') {
+                                        e.preventDefault();
+                                        const searchValue = e.target.value;
+                                        if (searchValue.trim()) {
+                                            router.push(`/search?query=${encodeURIComponent(searchValue)}`);
+                                        }
+                                    }
+                                }}
                             />
                         </Search>
                         <Box sx={{ flexGrow: 1 }} />
-                        <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                            <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-                                <Badge badgeContent={4} color="error">
-                                    <MailIcon />
-                                </Badge>
-                            </IconButton>
-                            <IconButton
-                                size="large"
-                                aria-label="show 17 new notifications"
-                                color="inherit"
-                            >
-                                <Badge badgeContent={17} color="error">
-                                    <NotificationsIcon />
-                                </Badge>
-                            </IconButton>
-                            <IconButton
-                                size="large"
-                                edge="end"
-                                aria-label="account of current user"
-                                aria-controls={menuId}
-                                aria-haspopup="true"
-                                onClick={handleProfileMenuOpen}
-                                color="inherit"
-                            >
-                                <Avatar {...stringAvatar('Kent Dodds')} sx={{ color: "#fb9555", backgroundColor: "white", width: 28, height: 28 }} />
-                            </IconButton>
-                        </Box>
-                        <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-                            <IconButton
-                                size="small"
-                                aria-label="show more"
-                                aria-controls={mobileMenuId}
-                                aria-haspopup="true"
-                                onClick={handleMobileMenuOpen}
-                                color="inherit"
-                            >
-                                <MoreIcon />
-                            </IconButton>
-                        </Box>
+                        {
+                            session ?
+                                <>
+                                    <Box sx={{
+                                        display: { xs: 'none', md: 'flex' }
+
+                                    }}>
+                                        <IconButton size="small" aria-label="show 4 new mails" color="inherit">
+                                            <Link href={"/product/upload"} style={{
+                                                textDecoration: 'none',
+                                                color: "white"
+                                            }}>Upload</Link>
+                                        </IconButton>
+                                        <IconButton
+                                            size="large"
+                                            edge="end"
+                                            aria-label="account of current user"
+                                            aria-controls={menuId}
+                                            aria-haspopup="true"
+                                            onClick={handleProfileMenuOpen}
+                                            color="inherit"
+                                        >
+                                            <Avatar {...stringAvatar(session.user.name || 'Admin Admin')} sx={{ color: "#fb9555", backgroundColor: "white", width: 28, height: 28 }} />
+                                        </IconButton>
+                                    </Box>
+                                    <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+                                        <IconButton
+                                            size="small"
+                                            aria-label="show more"
+                                            aria-controls={mobileMenuId}
+                                            aria-haspopup="true"
+                                            onClick={handleMobileMenuOpen}
+                                            color="inherit"
+                                        >
+                                            <MoreIcon />
+                                        </IconButton>
+                                    </Box>
+                                </>
+                                :
+                                <>
+                                    <Button onClick={() => signIn()} style={{
+                                        textDecoration: "none",
+                                        color: "#fff",
+                                        fontWeight: 500
+
+                                    }}>Login</Button>
+                                </>
+                        }
+
                     </Toolbar>
                 </Container>
             </AppBar>
