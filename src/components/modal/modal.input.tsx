@@ -34,7 +34,7 @@ const ModalInput = (props: any) => {
                         sx={{
                             // position: 'fixed', 
                             bottom: 0,
-                            width: { xs: '60%', md: '50%' },
+                            width: { xs: '60%', md: '20%' },
                             maxHeight: '90%',
                             bgcolor: 'background.paper',
                             borderRadius: '16px ',
@@ -44,7 +44,9 @@ const ModalInput = (props: any) => {
                     >
                         <Typography variant="h6" component="h2" sx={{ mb: 2 }}
                         >Thêm sản phầm vào giỏ hàng</Typography>
-                        <TextField label="Số lượng" variant="standard" placeholder="Nhập số lượng muốn mua" type="number" name="quantity" defaultValue={1} onChange={(e) => setQuantity(Number(e.target.value))} />
+                        <TextField sx={{
+                            display: 'flex',
+                        }} label="Số lượng" variant="standard" placeholder="Nhập số lượng muốn mua" type="number" name="quantity" defaultValue={1} onChange={(e) => setQuantity(Number(e.target.value))} />
                         <Box mt={2} display="flex" justifyContent="space-between" >
                             <Button variant="outlined" onClick={() => setModalInputOpen()} sx={{
                                 width: {

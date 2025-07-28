@@ -3,6 +3,7 @@ import { sendRequestDefault } from "@/utils/api";
 import { Container } from "@mui/material";
 import { getServerSession } from "next-auth";
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { notFound } from "next/navigation";
 
 const OrderPage = async () => {
     const session = await getServerSession(authOptions);
@@ -13,6 +14,9 @@ const OrderPage = async () => {
     })
 
 
+    if (res.data?.cartDetails.length === 0) {
+        notFound();
+    }
 
 
     return (

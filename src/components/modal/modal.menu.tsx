@@ -17,12 +17,28 @@ const ModalMenu = (props: IProps) => {
                 <Slide direction="up" in={modalOpen} mountOnEnter unmountOnExit>
                     <Box
                         sx={{
-                            position: 'fixed',
-                            bottom: 0,
-                            width: '100%',
+                            position: {
+                                xs: 'fixed',
+                                md: 'absolute',
+                            },
+                            bottom: {
+                                xs: 0,
+                                md: '50%',
+                            },
+                            left: {
+                                xs: 0,
+                                md: '25%',
+                            },
+                            width: {
+                                xs: '100%',
+                                md: '50%',
+                            },
                             maxHeight: '90%',
                             bgcolor: 'background.paper',
-                            borderRadius: '16px 16px 0 0',
+                            borderRadius: {
+                                xs: '16px 16px 0 0',
+                                md: 2,
+                            },
                             p: 2,
                             overflowY: 'auto',
                         }}
