@@ -10,7 +10,38 @@ import { AuthOptions } from "next-auth"
 import { sendRequest } from "@/utils/api"
 import { JWT } from "next-auth/jwt"
 import CredentialsProvider from "next-auth/providers/credentials";
+import dayjs from "dayjs"
 
+
+async function refreshAccessToken(token: JWT) {
+    // console.log("refreshAccessToken", token.refresh_token);
+
+    const res = await sendRequest<IBackendRes<JWT>>({
+        url: `http://localhost:8080/refresh-token`,
+        method: 'POST',
+        body: {
+            refresh_token: token.refresh_token
+        },
+    })
+    console.log("res", res);
+
+    if (res.data) {
+        return {
+            ...token,
+            access_token: res.data.access_token,
+            refresh_token: res.data.refresh_token,
+            access_expire: dayjs(new Date()).add(Number(process.env.JWT_ACCESS_EXPIRE || 30), 'day').unix(),
+            user: res.data.user
+        }
+    } else {
+        // If the access token is invalid, we can return the original token
+        // which will trigger a sign out
+        return {
+            ...token,
+            error: "RefreshAccessTokenError"
+        }
+    }
+}
 
 
 export const authOptions: AuthOptions = {
@@ -20,6 +51,7 @@ export const authOptions: AuthOptions = {
         CredentialsProvider({
             // The name to display on the sign in form (e.g. "Sign in with...")
             name: "Credentials",
+
             // `credentials` is used to generate a form on the sign in page.
             // You can specify which fields should be submitted, by adding keys to the `credentials` object.
             // e.g. domain, username, password, 2FA token, etc.
@@ -99,6 +131,7 @@ export const authOptions: AuthOptions = {
                     token.access_token = res.data.access_token
                     token.refresh_token = res.data.refresh_token
                     token.user = res.data.user
+
                 }
             }
 
@@ -109,8 +142,16 @@ export const authOptions: AuthOptions = {
 
                 token.refresh_token = user.refresh_token
 
+                token.access_expire = dayjs(new Date()).add(Number(process.env.JWT_ACCESS_EXPIRE || 30), 'days').unix()
+
                 token.user = user.user
             }
+
+            const isTimeAfter = dayjs(dayjs(new Date())).isAfter(dayjs.unix((token?.access_expire as number ?? 0)));
+            if (isTimeAfter) {
+                return await refreshAccessToken(token)
+            }
+
             return token
         },
         session({ session, token, user }) {
@@ -119,7 +160,10 @@ export const authOptions: AuthOptions = {
                 session.access_token = token.access_token
                 session.refresh_token = token.refresh_token
                 session.user = token.user
+                session.expires = token.access_expire as string
             }
+            console.log("token", token);
+
             return session
         },
     },

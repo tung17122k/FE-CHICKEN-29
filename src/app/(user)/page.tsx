@@ -22,7 +22,7 @@ export default async function HomePage() {
     method: 'GET',
     queryParams: { category: "FRIED_CHICKEN" }
   })
-  console.log("friedChicken", friedChicken);
+  // console.log("friedChicken", friedChicken);
 
 
 
