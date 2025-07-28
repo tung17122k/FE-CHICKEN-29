@@ -81,10 +81,9 @@ const OrderForm = (props: IProps) => {
 
 
 
-    const totalPrice = data.reduce(
-        (sum, item) => sum + item.price * item.quantity,
-        0
-    );
+    const totalPrice = Array.isArray(data)
+        ? data.reduce((sum, item) => sum + item.price * item.quantity, 0)
+        : 0;
 
     return (
 
@@ -97,7 +96,7 @@ const OrderForm = (props: IProps) => {
                         </Typography>
 
                         <Stack spacing={2}>
-                            {data.map((item) => (
+                            {(data ?? []).map((item) => (
                                 <Card key={item.id} sx={{ display: "flex", alignItems: "center" }}>
                                     <CardMedia
                                         component="img"

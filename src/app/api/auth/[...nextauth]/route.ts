@@ -113,7 +113,7 @@ export const authOptions: AuthOptions = {
         })
 
     ],
-    secret: process.env.NO_SECRET,
+    secret: process.env.NEXTAUTH_SECRET,
     callbacks: {
         async jwt({ token, user, account, profile, trigger }) {
             // social media tra ve data => goi len db de luu vao db => db tra ve res => luu vao token => roi lay tu token luu vao session
@@ -162,7 +162,7 @@ export const authOptions: AuthOptions = {
                 session.user = token.user
                 session.expires = token.access_expire as string
             }
-            console.log("token", token);
+            // console.log("token", token);
 
             return session
         },

@@ -11,7 +11,7 @@ interface IProps {
 
 const CartWrapper = (props: IProps) => {
     const { data } = props
-    const [cartDetails, setCartDetails] = useState<ICartDetailItem[]>(data.cartDetails);
+    const [cartDetails, setCartDetails] = useState<ICartDetailItem[]>(data.cartDetails || []);
 
     return (
         <>
