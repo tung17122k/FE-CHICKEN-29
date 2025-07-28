@@ -3,7 +3,7 @@
 import { Badge, Box, Button } from "@mui/material"
 import { useRouter } from "next/navigation";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import { sendRequestDefault } from "@/utils/api";
+import { sendRequest, sendRequestDefault } from "@/utils/api";
 import { useSession } from "next-auth/react";
 import { useToast } from "@/utils/toast";
 
@@ -33,8 +33,18 @@ const CartHeader = (props: IProps) => {
             headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session?.access_token}` },
             body: {
                 cartDetails: refinedCartDetails
+            },
+        })
+        await sendRequest<IBackendRes<any>>({
+            url: `/api/revalidate`,
+            method: 'POST',
+            queryParams: {
+                tag: 'cart',
+                secret: 'tokyo'
             }
         })
+        router.refresh()
+
         if (res.data) {
             router.push('/order');
             toast.success('Cập nhật giỏ hàng thành công!')

@@ -6,8 +6,9 @@ import HomeIcon from '@mui/icons-material/Home';
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from "react";
-import { sendRequestDefault } from "@/utils/api";
+import { sendRequest, sendRequestDefault } from "@/utils/api";
 import { useToast } from "@/utils/toast";
+import { useRouter } from "next/navigation";
 
 interface INewOrder {
     receiverName: string,
@@ -32,6 +33,7 @@ const OrderForm = (props: IProps) => {
     const { data } = props
     // console.log("session", session?.user);
     const toast = useToast()
+    const router = useRouter()
 
     const [infor, setInfor] = useState<INewOrder>({
         receiverName: '',
@@ -64,6 +66,15 @@ const OrderForm = (props: IProps) => {
             body: infor
         })
         // console.log("res", res);
+        await sendRequest<IBackendRes<any>>({
+            url: `/api/revalidate`,
+            method: 'POST',
+            queryParams: {
+                tag: 'order-history',
+                secret: 'tokyo'
+            }
+        })
+        router.push('/order-history')
 
         if (res.data) {
             toast.success("Đặt hàng thành công!");

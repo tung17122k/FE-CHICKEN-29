@@ -13,6 +13,9 @@ const OrderHistoryPage = async () => {
         url: `${process.env.NEXT_PUBLIC_BACKEND_URL}order-history`,
         method: 'GET',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session?.access_token}` },
+        nextOption: {
+            tags: ['order-history']
+        }
     })
 
 

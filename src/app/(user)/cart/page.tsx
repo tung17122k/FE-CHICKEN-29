@@ -19,6 +19,9 @@ const CartPage = async () => {
         url: `${process.env.NEXT_PUBLIC_BACKEND_URL}cart`,
         method: 'GET',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session?.access_token}` },
+        nextOption: {
+            tags: ['cart']
+        }
     })
 
 

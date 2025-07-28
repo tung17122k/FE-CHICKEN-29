@@ -5,11 +5,11 @@ import AddIcon from '@mui/icons-material/Add';
 import { useState } from "react";
 import ModalMenu from "../modal/modal.menu";
 import Link from "next/link";
-import { sendRequestDefault } from "@/utils/api";
+import { sendRequest, sendRequestDefault } from "@/utils/api";
 import { useSession } from 'next-auth/react';
 import { useToast } from "@/utils/toast";
 import ModalInput from "../modal/modal.input";
-
+import { useRouter } from 'next/navigation'
 
 interface IProps {
     data: IProductCategory[],
@@ -25,7 +25,7 @@ const MainSlider = (props: IProps) => {
     const [selectedProduct, setSelectedProduct] = useState<IProductCategory>()
     // console.log("selected", selectedProduct);
 
-
+    const router = useRouter()
 
     const [item, setItem] = useState<IProductCategory | undefined>()
     const { data: session } = useSession();
@@ -62,6 +62,15 @@ const MainSlider = (props: IProps) => {
                 ]
             }
         })
+        await sendRequest<IBackendRes<any>>({
+            url: `/api/revalidate`,
+            method: 'POST',
+            queryParams: {
+                tag: 'cart',
+                secret: 'tokyo'
+            }
+        })
+        router.refresh()
         // console.log("res", res);
         if (res.data) {
             toast.success(res.message)
