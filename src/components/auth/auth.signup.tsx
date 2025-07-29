@@ -1,22 +1,20 @@
 'use client'
 // https://next-auth.js.org/configuration/pages
 
-import { Alert, AlertTitle, Avatar, Box, Button, Grid, IconButton, InputAdornment, Paper, Snackbar, SnackbarCloseReason, TextField, Typography } from "@mui/material"
-import Divider from '@mui/material/Divider';
+import { Alert, AlertTitle, Avatar, Box, Button, Grid, IconButton, InputAdornment, Paper, Snackbar, SnackbarCloseReason, TextField } from "@mui/material"
 import LockIcon from '@mui/icons-material/Lock';
 import { useState } from "react";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import GitHubIcon from '@mui/icons-material/GitHub';
-import GoogleIcon from '@mui/icons-material/Google';
 import { getProviders, signIn } from "next-auth/react"
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { sendRequestDefault } from "@/utils/api";
 
 
 
 
-const AuthSignIn = () => {
+const AuthSignUp = () => {
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
     const [isErrorEmail, setIsErrorEmail] = useState<boolean>(false)
@@ -24,9 +22,14 @@ const AuthSignIn = () => {
     const [errorEmail, setErrorEmail] = useState<string>("")
     const [errorPassword, setErrorPassword] = useState<string>("")
     const [showPassword, setShowPassword] = useState<boolean>(false)
+    const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false)
     const [open, setOpen] = useState<boolean>(false)
     const [errorMessage, setErrorMessage] = useState<string>("")
     const handleClickShowPassword = () => setShowPassword((show) => !show);
+    const handleClickShowConfirmPassword = () => setShowConfirmPassword((show) => !show);
+    const [confirmPassword, setConfirmPassword] = useState<string>("")
+    const [isErrorConfirmPassword, setIsErrorConfirmPassword] = useState<boolean>(false)
+    const [errorConfirmPassword, setErrorConfirmPassword] = useState<string>("")
     const router = useRouter()
 
     const handleClose = (
@@ -45,6 +48,8 @@ const AuthSignIn = () => {
         setIsErrorPassword(false);
         setErrorEmail("");
         setErrorPassword("");
+        setIsErrorConfirmPassword(false)
+        setErrorConfirmPassword("")
 
         if (!email) {
             setIsErrorEmail(true);
@@ -56,18 +61,41 @@ const AuthSignIn = () => {
             setErrorPassword("Password is not empty.")
             return;
         }
+        if (!confirmPassword) {
+            setIsErrorConfirmPassword(true)
+            setErrorConfirmPassword("Confirm password is not empty.")
+            return;
+        }
+        if (password !== confirmPassword) {
+            setIsErrorConfirmPassword(true)
+            setErrorConfirmPassword("Passwords do not match.")
+            return;
+        }
 
-        const res = await signIn("credentials", {
-            email: email,
-            password: password,
-            redirect: false
+        // const res = await signIn("credentials", {
+        //     email: email,
+        //     password: password,
+        //     redirect: false
+        // })
+
+        const res = await sendRequestDefault<IBackendRes<any>>({
+            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}register`,
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: {
+                email: email,
+                password: password,
+                confirmPassword: confirmPassword
+            }
         })
         // console.log("res", res);
         if (!res?.error) {
-            router.push("/")
+            router.push("/auth/verify")
         } else {
             setOpen(true)
-            setErrorMessage(res?.error)
+            setErrorMessage(res?.error as string)
         }
     }
 
@@ -103,7 +131,7 @@ const AuthSignIn = () => {
                             </Avatar>
                             <h2 style={{
                                 color: "#fb9555", margin: 0
-                            }}>SignIn</h2>
+                            }}>SignUp</h2>
                             <TextField label="Email" variant="outlined" fullWidth name="email" onChange={(e) => setEmail(e.target.value)} type="email" required error={isErrorEmail} helperText={errorEmail} />
 
                             <TextField
@@ -134,43 +162,36 @@ const AuthSignIn = () => {
                                         </InputAdornment>
 
                                 }} />
-                            <div style={{
-                                display: "flex",
-                                width: "100%",
-                                justifyContent: "space-between",
-                                alignItems: "center"
-                            }}>
-                                <div></div>
-                                <Typography sx={{
-                                    color: "orange.main",
-                                    cursor: "pointer",
-                                    textDecoration: "underline",
-                                    textAlign: 'left'
+                            <TextField
+                                label="Confirm Password"
+                                variant="outlined"
+                                fullWidth
+                                name="confirmPassword"
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                type={showConfirmPassword ? 'text' : 'password'}
+                                required
+                                onKeyDown={(e) => { if (e.key === 'Enter') { handleSubmit() } }}
+                                error={isErrorConfirmPassword}
+                                helperText={errorConfirmPassword}
+                                InputProps={{
+                                    endAdornment:
+                                        <InputAdornment position="end" sx={{ bgcolor: "transparent" }}>
+                                            <IconButton
+                                                aria-label={showConfirmPassword ? 'hide the password' : 'display the password'}
+                                                onClick={handleClickShowConfirmPassword}
+                                                sx={{ bgcolor: "transparent" }}
+                                            >
+                                                {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                                            </IconButton>
+                                        </InputAdornment>
                                 }}
-                                    onClick={() => router.push("/auth/signup")}
-                                >Đăng ký tài khoản</Typography>
-                            </div>
-
+                            />
                             <Button type="submit" fullWidth variant="contained" onClick={() => handleSubmit()} sx={{
-                                bgcolor: "orange.main"
+                                bgcolor: "orange.main",
+                                marginBottom: "20px",
                             }}>
-                                Signin
+                                Signup
                             </Button>
-                            <Divider>Or using</Divider>
-                            <Box sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                gap: "10px",
-                                marginBottom: "20px"
-                            }}>
-                                <Avatar onClick={() => { signIn("github") }} sx={{ bgcolor: "#fb9555", cursor: "pointer" }} >
-                                    <GitHubIcon />
-                                </Avatar>
-                                <Avatar sx={{ bgcolor: "orange.main", cursor: "pointer" }} onClick={() => { signIn("google") }}>
-                                    <GoogleIcon />
-                                </Avatar>
-                            </Box>
                         </Box>
                     </div>
                 </Grid>
@@ -189,4 +210,4 @@ const AuthSignIn = () => {
     )
 }
 
-export default AuthSignIn
+export default AuthSignUp
