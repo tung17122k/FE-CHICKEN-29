@@ -74,7 +74,7 @@ const OrderForm = (props: IProps) => {
                 secret: 'tokyo'
             }
         })
-        router.push('/order-history')
+
 
         if (res.data) {
             toast.success("Đặt hàng thành công!");
@@ -84,7 +84,10 @@ const OrderForm = (props: IProps) => {
                 }, 1000)
             }
         } else {
-            toast.error("Đã có lỗi xảy ra!")
+            toast.error(res.message || 'Đặt hàng thất bại!')
+        }
+        if (infor.paymentMethod === 'COD') {
+            router.push('/order-history');
         }
     }
 
